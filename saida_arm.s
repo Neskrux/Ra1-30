@@ -1,4 +1,4 @@
-/* Gerado automaticamente — Fase 1 RPN → ARMv7 VFP — CPUlator DE1-SoC */
+/* RA1-30 / PUCPR — saida_arm.s */
 .syntax unified
 .cpu cortex-a9
 .fpu vfpv3-d16
@@ -23,7 +23,7 @@ _start:
 halt_loop:
 	b halt_loop
 
-/* Escreve parte baixa do IEEE754 em HEX3-0 (visualização no simulador) */
+/* d0 -> HEX3_HEX0 */
 mostrar_d0_hex:
 	push {r4, lr}
 	sub sp, sp, #8

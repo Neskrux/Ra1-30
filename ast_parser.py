@@ -1,5 +1,6 @@
-# Parser recursivo de expressões RPN parentetizadas (sem avaliar aritmética da linguagem).
-# Integrantes (A–Z) + @GitHub: [PREENCHER] | Grupo Canvas: [PREENCHER]
+# PUCPR — Construção de Interpretadores — Prof. Frank Coelho
+# Grupo Canvas: RA1 30 | https://github.com/Neskrux/Ra1-30
+# Integrantes (A–Z): Biscaia, Davi — @biscaiadavi | Sandoval, Bruno — @Neskrux
 
 from __future__ import annotations
 

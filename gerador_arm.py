@@ -1,14 +1,12 @@
-# Geração de Assembly ARMv7 + VFP para CPUlator DE1-SoC (DEC1-SOC).
-# Os cálculos ocorrem apenas no Assembly gerado.
-# Integrantes (A–Z) + @GitHub: [PREENCHER] | Grupo Canvas: [PREENCHER]
+# PUCPR — Construção de Interpretadores — Prof. Frank Coelho
+# Grupo Canvas: RA1 30 | https://github.com/Neskrux/Ra1-30
+# Integrantes (A–Z): Biscaia, Davi — @biscaiadavi | Sandoval, Bruno — @Neskrux
 
 from __future__ import annotations
 
-from typing import Callable, List, Set, Tuple
+from typing import List, Set, Tuple
 
 from ast_parser import AstNode
-
-SalvarHist = Callable[[int], None]
 
 
 class ErroGeracao(Exception):
@@ -25,10 +23,6 @@ def gerarAssembly(
     literais: Set[str],
     codigoAssembly: List[str],
 ) -> None:
-    """
-    Preenche codigoAssembly (lista de linhas) com o programa ARM completo.
-    asts: uma AST por linha do arquivo de teste.
-    """
     codigoAssembly.clear()
     g = _Gerador(asts, memorias, literais, codigoAssembly)
     g.emitir_programa()
@@ -60,7 +54,7 @@ class _Gerador:
 
     def emitir_programa(self) -> None:
         n = len(self.asts)
-        self._ln("/* Gerado automaticamente — Fase 1 RPN → ARMv7 VFP — CPUlator DE1-SoC */")
+        self._ln("/* RA1-30 / PUCPR — saida_arm.s */")
         self._ln(".syntax unified")
         self._ln(".cpu cortex-a9")
         self._ln(".fpu vfpv3-d16")
@@ -85,7 +79,7 @@ class _Gerador:
         self._ln("halt_loop:")
         self._emit("b halt_loop")
         self._ln("")
-        self._ln("/* Escreve parte baixa do IEEE754 em HEX3-0 (visualização no simulador) */")
+        self._ln("/* d0 -> HEX3_HEX0 */")
         self._ln("mostrar_d0_hex:")
         self._emit("push {r4, lr}")
         self._emit("sub sp, sp, #8")

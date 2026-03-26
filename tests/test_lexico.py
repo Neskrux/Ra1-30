@@ -1,5 +1,3 @@
-# Testes do analisador léxico (AFD) — entradas válidas e inválidas.
-
 import sys
 from pathlib import Path
 

@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-# rpn_fase1 — Repositório: https://github.com/Neskrux/Ra1-30
-# Integrantes (A–Z) + @Neskrux, @biscaiadavi]
-# Grupo (Canvas): [RA1 30]
-# PUCPR / Construção de Interpretadores / Professor: [Frank Coelho]
+# PUCPR — Construção de Interpretadores — Prof. Frank Coelho
+# Grupo Canvas: RA1 30 | https://github.com/Neskrux/Ra1-30
+# Integrantes (A–Z): Biscaia, Davi — @biscaiadavi | Sandoval, Bruno — @Neskrux
 
 from __future__ import annotations
 
@@ -21,8 +20,6 @@ _CTX_ATIVO: ContextoExecucao | None = None
 
 @dataclass
 class ContextoExecucao:
-    """Estado simbólico da “execução”: ASTs por linha, memórias e literais para o Assembly."""
-
     asts: list = field(default_factory=list)
     memorias: Set[str] = field(default_factory=set)
     literais: Set[str] = field(default_factory=set)
@@ -30,7 +27,6 @@ class ContextoExecucao:
 
 
 def lerArquivo(nomeArquivo: str, linhas: List[str]) -> None:
-    """Lê o arquivo de teste para o vetor linhas (uma string por linha, sem \\n final)."""
     linhas.clear()
     p = Path(nomeArquivo)
     if not p.is_file():
@@ -41,7 +37,6 @@ def lerArquivo(nomeArquivo: str, linhas: List[str]) -> None:
 
 
 def iniciarContextoCompilacao() -> None:
-    """Inicia um novo contexto (um arquivo de teste / uma execução completa)."""
     global _CTX_ATIVO
     _CTX_ATIVO = ContextoExecucao()
 
@@ -53,34 +48,22 @@ def contextoAtivo() -> ContextoExecucao:
 
 
 def executarExpressao(linha_tokens: List[str], estado: ContextoExecucao) -> None:
-    """
-    Constrói a AST da linha, atualiza conjuntos de memória/literais e o histórico simbólico.
-    Não avalia operações aritméticas da linguagem em Python — apenas estrutura para o Assembly.
-    """
     ast = parse_linha_tokens(linha_tokens)
     estado.asts.append(ast)
     coletar_memorias(ast, estado.memorias)
     coletar_literais(ast, estado.literais)
     n = len(estado.asts)
-    estado.resumos_linha.append(
-        f"Linha {n}: expressão aceita; resultado será gravado em hist[{n - 1}] "
-        f"e refletido no display HEX (0xFF200020) no CPUlator após a execução da linha."
-    )
+    estado.resumos_linha.append(f"Linha {n}: ok — hist[{n - 1}], HEX 0xFF200020")
 
 
 def gerarAssembly(_tokens_: List[str], codigoAssembly: List[str]) -> None:
-    """
-    Recebe o vetor de tokens (última linha ou vazio) e preenche codigoAssembly com o programa ARM completo.
-    O estado simbólico vem das chamadas anteriores a executarExpressao no mesmo contexto iniciado por iniciarContextoCompilacao().
-    """
     _ = _tokens_
     estado = contextoAtivo()
     _gerarAssembly_interno(estado.asts, estado.memorias, estado.literais, codigoAssembly)
 
 
 def exibirResultados(resultados: List[str]) -> None:
-    """Exibe resumo textual por linha (sem calcular em Python o valor das expressões)."""
-    print("=== Resumo da compilação (valores finais apenas no ARM / CPUlator) ===")
+    print("Compilação:")
     for r in resultados:
         print(r)
 
@@ -144,8 +127,8 @@ def main(argv: List[str]) -> int:
 
     exibirResultados(estado.resumos_linha)
     print()
-    print(f"Tokens salvos em: {base_dir / 'tokens_ultima_execucao.txt'}")
-    print(f"Assembly salvo em: {base_dir / 'saida_arm.s'}")
+    print(f"tokens_ultima_execucao.txt → {base_dir}")
+    print(f"saida_arm.s → {base_dir}")
     return 0
 
 

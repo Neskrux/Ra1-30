@@ -1,6 +1,6 @@
-# Lexico — AFD: cada estado é uma função (sem regex na análise léxica).
-# Integrantes (ordem alfabética) e @GitHub: [PREENCHER]
-# Grupo Canvas: [PREENCHER]
+# PUCPR — Construção de Interpretadores — Prof. Frank Coelho
+# Grupo Canvas: RA1 30 | https://github.com/Neskrux/Ra1-30
+# Integrantes (A–Z): Biscaia, Davi — @biscaiadavi | Sandoval, Bruno — @Neskrux
 
 from __future__ import annotations
 
@@ -26,7 +26,6 @@ class _CtxLex:
         self.buffer = ""
 
 
-# Tipo: (caractere ou '\0' no fim, índice atual) -> (próximo_estado, novo_índice)
 EstadoFn = Callable[[str, int, _CtxLex], Tuple[Callable[..., Tuple], int]]
 
 
@@ -158,10 +157,6 @@ def _executar_afd(linha: str) -> List[str]:
 
 
 def parseExpressao(linha: str, _tokens_: Optional[List[str]] = None) -> List[str]:
-    """
-    Analisa uma linha (análise léxica via AFD) e devolve a lista de tokens.
-    Se _tokens_ for fornecido, limpa e preenche esse vetor (interface pedida).
-    """
     s = linha.strip()
     if not s:
         if _tokens_ is not None:
