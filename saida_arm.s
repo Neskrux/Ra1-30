@@ -143,7 +143,7 @@ linha_1:
 	vmov r1, s2
 	cmp r1, #0
 	beq divzero_die
-	sdiv r2, r0, r1
+	bl idiv_trunc
 	vmov s4, r2
 	vcvt.f64.s32 d0, s4
 	vpush {d0}
@@ -159,7 +159,7 @@ linha_1:
 	vmov r1, s2
 	cmp r1, #0
 	beq divzero_die
-	sdiv r2, r0, r1
+	bl idiv_trunc
 	mls r3, r1, r2, r0
 	vmov s4, r3
 	vcvt.f64.s32 d0, s4
@@ -273,7 +273,7 @@ linha_5:
 	vmov r1, s2
 	cmp r1, #0
 	beq divzero_die
-	sdiv r2, r0, r1
+	bl idiv_trunc
 	vmov s4, r2
 	vcvt.f64.s32 d0, s4
 	bx lr
@@ -291,7 +291,7 @@ linha_6:
 	vmov r1, s2
 	cmp r1, #0
 	beq divzero_die
-	sdiv r2, r0, r1
+	bl idiv_trunc
 	mls r3, r1, r2, r0
 	vmov s4, r3
 	vcvt.f64.s32 d0, s4
@@ -381,7 +381,7 @@ linha_9:
 	vmov r1, s2
 	cmp r1, #0
 	beq divzero_die
-	sdiv r2, r0, r1
+	bl idiv_trunc
 	vmov s4, r2
 	vcvt.f64.s32 d0, s4
 	vpush {d0}
@@ -496,6 +496,55 @@ stack:
 stack_top:
 
 .section .text
+udiv32:
+	push {r4, r5, r6, r7, lr}
+	mov r7, #0
+	mov r3, #0
+	mov r5, r0
+	mov r6, r1
+	mov r4, #31
+ud32_loop:
+	lsl r3, r3, #1
+	mov r2, r5
+	lsr r2, r2, r4
+	and r2, r2, #1
+	orr r3, r3, r2
+	cmp r3, r6
+	blt ud32_skip
+	sub r3, r3, r6
+	mov r2, #1
+	lsl r2, r2, r4
+	orr r7, r7, r2
+ud32_skip:
+	subs r4, r4, #1
+	bge ud32_loop
+	mov r2, r7
+	pop {r4, r5, r6, r7, pc}
+
+idiv_trunc:
+	push {r4, r5, r6, lr}
+	mov r4, r0
+	mov r5, r1
+	mov r6, #0
+	cmp r4, #0
+	rsblt r4, r4, #0
+	orrlt r6, r6, #1
+	cmp r5, #0
+	rsblt r5, r5, #0
+	orrlt r6, r6, #2
+	mov r0, r4
+	mov r1, r5
+	bl udiv32
+	cmp r6, #1
+	beq idiv_neg
+	cmp r6, #2
+	beq idiv_neg
+	b idiv_ret
+idiv_neg:
+	rsb r2, r2, #0
+idiv_ret:
+	pop {r4, r5, r6, pc}
+
 divzero_die:
 	b divzero_die
 pow_neg_err:
